@@ -1,0 +1,63 @@
+<h1>Configuration</h1>
+<p>These settings determine how your Deepgram Voice Agent behaves.</p>
+<form>
+  <label for="apiKey">API Key:</label>
+  <input name="apiKey" id="apiKey" type="{{passType}}" [formControl]="apiKey">
+  <label for="showPass">Show?</label>
+  <input type="checkbox" id="showPass" name="showPass" (click)="togglePass()" />
+  <label for="speak">Speak Model:</label>
+  <select name="speak" id="speak" [formControl]="speakModel">
+    <option value="aura-asteria-en">aura-asteria-en</option>
+    <option value="aura-luna-en">aura-luna-en</option>
+    <option value="aura-athena-en">aura-athena-en</option>
+    <option value="aura-stella-en">aura-stella-en</option>
+    <option value="aura-hera-en">aura-hera-en</option>
+    <option value="aura-orion-en">aura-orion-en</option>
+    <option value="aura-arcas-en">aura-arcas-en</option>
+    <option value="aura-perseus-en">aura-perseus-en</option>
+    <option value="aura-angus-en">aura-angus-en</option>
+    <option value="aura-orpheus-en">aura-orpheus-en</option>
+    <option value="aura-helios-en">aura-helios-en</option>
+    <option value="aura-zeus-en">aura-zeus-en</option>
+  </select>
+  <label for="listen">Listen Model:</label>
+  <select name="listen" id="listen" [formControl]="listenModel">
+    <option value="nova-2">nova-2</option>
+    <option value="nova-2-meeting">nova-2-meeting</option>
+    <option value="nova-2-phonecall">nova-2-phonecall</option>
+    <option value="nova-2-finance">nova-2-finance</option>
+    <option value="nova-2-conversationalai">nova-2-conversationalai</option>
+    <option value="nova-2-voicemail">nova-2-voicemail</option>
+    <option value="nova-2-video">nova-2-video</option>
+    <option value="nova-2-medical">nova-2-medical</option>
+    <option value="nova-2-drivethru">nova-2-drivethru</option>
+    <option value="nova-2-automotive">nova-2-automotive</option>
+    <option value="nova-2-atc">nova-2-atc</option>
+    <option value="nova">nova</option>
+    <option value="nova-phonecall">nova-phonecall</option>
+    <option value="nova-medical">nova-medical</option>
+    <option value="enhanced">enhanced</option>
+    <option value="enhanced-phonecall">enhanced-phonecall</option>
+    <option value="enhanced-meeting">enhanced-meeting</option>
+    <option value="enhanced-finance">enhanced-finance</option>
+    <option value="base">base</option>
+    <option value="base-phonecall">base-phonecall</option>
+    <option value="base-meeting">base-meeting</option>
+    <option value="base-finance">base-finance</option>
+    <option value="base-conversationalai">base-conversationalai</option>
+    <option value="base-voicemail">base-voicemail</option>
+    <option value="base-video">base-video</option>
+    <option value="whisper-tiny">whisper-tiny</option>
+    <option value="whisper-small">whisper-small</option>
+    <option value="whisper-medium">whisper-medium</option>
+    <option value="whisper-large">whisper-large</option>
+    <option value="whisper-base">whisper-base</option>
+  </select>
+  <label for="think">Think Model:</label>
+  <select name="think" id="think" [formControl]="thinkModel">
+    <option value="gpt-4o-mini">gpt-4o-mini</option>
+    <option value="claude-3-haiku-20240307">claude-3-haiku-20240307</option>
+  </select>
+</form>
+<button class="green" (click)="save()">Save Configuration</button>
+<button class="red" (click)="cancel()">Cancel</button>

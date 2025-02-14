@@ -1,0 +1,22 @@
+form {
+    display: grid;
+    grid-template-columns: 200px 400px;
+    margin: auto;
+    width: 600px;
+}
+
+input, select {
+    margin-bottom: 1rem;
+}
+
+.green {
+    background: green;
+}
+
+.red {
+    background: red;
+}
+
+button {
+    border: 2px solid white;
+}

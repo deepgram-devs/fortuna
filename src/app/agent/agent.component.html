@@ -1,0 +1,28 @@
+<h1>Deepgram Voice Assistant</h1>
+<audio></audio>
+<div *ngIf="!connected">
+  <p>When you are ready to connect to the websocket, click the button below.</p>
+  <p>
+    Note that you are billed for time connected, not for time you spend
+    transmitting audio.
+  </p>
+  <button (click)="connect()">Connect</button>
+</div>
+<div *ngIf="connected">
+  <button *ngIf="!recording && !togglingMic" (click)="startRecording()">Start Microphone</button>
+    <button *ngIf="recording && !togglingMic" (click)="stopRecording()">Stop Microphone</button>
+  <p>
+    When you are done with your conversation, we recommend disconnecting to save
+    costs.
+  </p>
+  <button (click)="disconnect()">Disconnect</button>
+</div>
+<h2>Transcript</h2>
+<button (click)="clearTranscript()">Clear Transcript</button>
+<p *ngFor="let message of messages">{{ message.content }}</p>
+<h2>Logs</h2>
+<button (click)="clearLogs()">Clear Logs</button>
+<p *ngFor="let log of logs">{{ log }}</p>
+<h2>Errors</h2>
+<button (click)="clearErrors()">Clear Errors</button>
+<p *ngFor="let error of errors">{{ error }}</p>
