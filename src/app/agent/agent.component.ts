@@ -41,8 +41,10 @@ export class AgentComponent {
   private async mountAgent() {
     this.agent = this.deepgram!.agent();
     this.agent.on(AgentEvents.Error, (err) => this.errors.push(err.message));
-    this.agent.on(AgentEvents.Open, () =>
-      this.logs.push("Websocket connection opened!")
+    this.agent.on(AgentEvents.Open, () => {
+        this.agent!.conn!.binaryType = "arraybuffer";
+        this.logs.push("Websocket connection opened!")
+      }
     );
     this.agent.on(AgentEvents.Close, () => {
       this.logs.push("Websocket connection closed!");
@@ -83,7 +85,7 @@ export class AgentComponent {
         audio: {
           input: {
             encoding: "linear16",
-            sampleRate: 44100,
+            sampleRate: 48000,
           },
           output: {
             encoding: "linear16",

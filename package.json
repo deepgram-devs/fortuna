@@ -1,9 +1,10 @@
 {
-  "name": "deepgram-voice-assistant",
+  "name": "fortuna",
   "version": "0.1.0",
   "main": "app.js",
   "scripts": {
     "ng": "ng",
+    "dev": "concurrently \"ng serve\" \"wait-on http://localhost:4200 && electron dev.js\"",
     "start": "ng build --base-href ./ && electron .",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
@@ -35,6 +36,7 @@
     "@tauri-apps/cli": "^2",
     "@types/jasmine": "~5.1.5",
     "@types/node": "22.13.1",
+    "concurrently": "^9.1.2",
     "electron": "34.0.2",
     "eslint": "9.19.0",
     "jasmine-core": "~5.5.0",
@@ -43,7 +45,8 @@
     "karma-coverage": "~2.2.1",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.7.3"
+    "typescript": "~5.7.3",
+    "wait-on": "^8.0.2"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

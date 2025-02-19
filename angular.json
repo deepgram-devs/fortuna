@@ -6,7 +6,7 @@
     "analytics": false
   },
   "projects": {
-    "deepgram-voice-assistant": {
+    "fortuna": {
       "projectType": "application",
       "root": "",
       "sourceRoot": "src",
@@ -15,7 +15,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/deepgram-voice-assistant",
+            "outputPath": "dist/fortuna",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -49,14 +49,14 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "port": 1420
+            "port": 4200
           },
           "configurations": {
             "production": {
-              "buildTarget": "deepgram-voice-assistant:build:production"
+              "buildTarget": "fortuna:build:production"
             },
             "development": {
-              "buildTarget": "deepgram-voice-assistant:build:development"
+              "buildTarget": "fortuna:build:development"
             }
           },
           "defaultConfiguration": "development"

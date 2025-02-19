@@ -12,12 +12,11 @@ const {app, BrowserWindow} = require('electron')
           nodeIntegration: true
         }
       })
-      mainWindow.removeMenu();
 
       mainWindow.loadURL(
         url.format({
-          pathname: path.join(__dirname, `/dist/fortuna/browser/index.html`),
-          protocol: "file:",
+          pathname: "localhost:4200",
+          protocol: "http:",
           slashes: true
         })
       );
