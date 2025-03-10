@@ -1,8 +1,18 @@
 # Fortuna
 
+[![Discord](https://dcbadge.vercel.app/api/server/xWRaCDBtW4?style=flat)](https://discord.gg/xWRaCDBtW4)
+
 This is an Electron application that provides access to Deepgram's Voice Agent as a desktop application.
 
 We currently build and distribute a binary for Linux which should be distro-agnostic.
+
+## What is Deepgram?
+
+[Deepgram’s](https://deepgram.com/) voice AI platform provides APIs for speech-to-text, text-to-speech, and full speech-to-speech voice agents. Over 200,000+ developers use Deepgram to build voice AI products and features.
+
+## Sign-up to Deepgram
+
+Before you start, it's essential to generate a Deepgram API key to use in this project. [Sign-up now for Deepgram and create an API key](https://console.deepgram.com/signup?jump=keys).
 
 ## Installation
 
@@ -16,17 +26,12 @@ You can then launch Fortuna through your favourite application launcher!
 
 The first time you use the application, you will need to configure your API key and agent settings.
 
-> [!TIP]
-> Need an API key? Sign up for one at https://deepgram.com
-
 Once you have configured these, you can click "Start Agent" to load the interface. Click "Connect" to connect to the agent and begin conversing.
 
 ## Development
 
 > [!WARNING]
 > Currently our browser-agent orb is NOT published for distribution. To successfully install the dependencies, you will need to package the source manually and copy it to your cloned repository.
->
-> Reach out to Naomi if you have questions.
 
 Clone this repository, then `cd` into your cloned directory.
 
@@ -49,3 +54,15 @@ To build the application for distribution, follow the above instructions to clon
 Then run `npm run build` to generate the Angular distributable (available in `/dist`), and `npm run make` to compile that distributable into a Linux binary.
 
 The resulting binary will be compressed in a ZIP file, and can be found in `/out/make`.
+
+## Issue Reporting
+
+If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. The [Security Policy](./SECURITY.md) details the procedure for contacting Deepgram.
+
+## Getting Help
+
+We love to hear from you so if you have questions, comments or find a bug in the project, let us know! You can either:
+
+- [Open an issue in this repository](https://github.com/deepgram-starters/prerecorded-sinatra-starter/issues/new)
+- [Join the Deepgram Github Discussions Community](https://github.com/orgs/deepgram/discussions)
+- [Join the Deepgram Discord Community](https://discord.gg/xWRaCDBtW4)
