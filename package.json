@@ -2,7 +2,7 @@
   "name": "fortuna",
   "description": "Deepgram's Voice Agent right on your desktop!",
   "author": "Naomi Carrigan <contact@nhcarrigan.com>",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "main": "app.js",
   "license": "ISC",
   "scripts": {
