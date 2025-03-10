@@ -1,5 +1,12 @@
-<h1>Deepgram Voice Assistant</h1>
-<audio></audio>
+<h1>Fortuna</h1>
+<deepgram-agent id="dg-agent"
+url="wss://agent.deepgram.com/agent"
+height="250"
+width="250"
+idle-timeout-ms="1000000"></deepgram-agent>
+<p>
+  Usage: {{ this.cost.toLocaleString("en-US", { style: "currency", currency: "USD"})}}
+</p>
 <div *ngIf="!connected">
   <p>When you are ready to connect to the websocket, click the button below.</p>
   <p>
@@ -9,17 +16,18 @@
   <button (click)="connect()">Connect</button>
 </div>
 <div *ngIf="connected">
-  <button *ngIf="!recording && !togglingMic" (click)="startRecording()">Start Microphone</button>
-    <button *ngIf="recording && !togglingMic" (click)="stopRecording()">Stop Microphone</button>
   <p>
     When you are done with your conversation, we recommend disconnecting to save
     costs.
   </p>
   <button (click)="disconnect()">Disconnect</button>
 </div>
+<p>
+<a routerLink="/config">Reconfigure</a>
+</p>
 <h2>Transcript</h2>
 <button (click)="clearTranscript()">Clear Transcript</button>
-<p *ngFor="let message of messages">{{ message.content }}</p>
+<p *ngFor="let message of messages" [class]="message.type">{{ message.content }}</p>
 <h2>Logs</h2>
 <button (click)="clearLogs()">Clear Logs</button>
 <p *ngFor="let log of logs">{{ log }}</p>

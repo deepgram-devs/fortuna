@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Fortuna
+Exec=.fortuna/fortuna
+NoDisplay=true
+StartupNotify=true
+Comment=
+Path=~
+Terminal=false

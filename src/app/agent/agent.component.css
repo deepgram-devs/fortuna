@@ -1,0 +1,20 @@
+.assistant {
+    text-align: left;
+    color: greenyellow;
+}
+
+.user {
+    text-align: right;
+    color: cyan;
+}
+
+a {
+    color: white;
+}
+
+deepgram-agent {
+    width: 250px;
+    height: 250px;
+    display: block;
+    margin: auto;
+}

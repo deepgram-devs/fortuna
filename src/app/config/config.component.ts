@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { AbstractControl, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ConfigService } from '../config.service';
 import { Config } from '../interfaces/Config';
-import type { AgentLiveSchema } from "@deepgram/sdk";
 import { Router } from '@angular/router';
 
 @Component({
@@ -24,7 +23,7 @@ export class ConfigComponent {
   ]);
   public listenModel = new FormControl("nova-2", [
     Validators.required,
-    () => (control: AbstractControl) => [            "nova-2", "nova-2-meeting", "nova-2-phonecall", "nova-2-finance",
+    () => (control: AbstractControl) => [            "nova-3", "nova-3-medical", "nova-2", "nova-2-meeting", "nova-2-phonecall", "nova-2-finance",
             "nova-2-conversationalai", "nova-2-finance", "nova-2-voicemail",
             "nova-2-video", "nova-2-medical", "nova-2-drivethru", "nova-2-automotive",
             "nova-2-atc", "nova", "nova-phonecall", "nova-medical", "enhanced",
@@ -48,9 +47,9 @@ export class ConfigComponent {
   public save() {
     const config: Config = {
       apiKey: this.apiKey.value ?? "",
-      speakModel: this.speakModel.value as AgentLiveSchema["agent"]["speak"]["model"],
-      listenModel: this.listenModel.value as AgentLiveSchema["agent"]["listen"]["model"],
-      thinkModel: this.thinkModel.value as AgentLiveSchema["agent"]["think"]["model"]
+      speakModel: String(this.speakModel.value),
+      listenModel: String(this.listenModel.value),
+      thinkModel: String(this.thinkModel.value)
     }
     this.configService.setConfig(config);
 

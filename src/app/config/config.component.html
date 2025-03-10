@@ -1,5 +1,8 @@
 <h1>Configuration</h1>
 <p>These settings determine how your Deepgram Voice Agent behaves.</p>
+<p>
+  Need an API key? Visit https://deepgram.com to get one!
+</p>
 <form>
   <label for="apiKey">API Key:</label>
   <input name="apiKey" id="apiKey" type="{{passType}}" [formControl]="apiKey">
@@ -22,6 +25,8 @@
   </select>
   <label for="listen">Listen Model:</label>
   <select name="listen" id="listen" [formControl]="listenModel">
+    <option value="nova-3">nova-3</option>
+    <option value="nova-3-medical">nova-3-medical</option>
     <option value="nova-2">nova-2</option>
     <option value="nova-2-meeting">nova-2-meeting</option>
     <option value="nova-2-phonecall">nova-2-phonecall</option>

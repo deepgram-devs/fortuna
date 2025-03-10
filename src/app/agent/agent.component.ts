@@ -1,188 +1,150 @@
-import { Component } from "@angular/core";
+import "@deepgram/browser-agent";
+import { Component, CUSTOM_ELEMENTS_SCHEMA, type OnInit } from "@angular/core";
 import { ConfigService } from "../config.service";
 import { Config } from "../interfaces/Config";
 import { CommonModule } from "@angular/common";
-import {
-  AgentEvents,
-  AgentLiveClient,
-  createClient,
-  DeepgramClient,
-} from "@deepgram/sdk";
-import { Router } from "@angular/router";
-import { AudioRecorderService } from "../audio-recorder.service.js";
+import { Router, RouterModule } from "@angular/router";
 
 @Component({
   selector: "app-agent",
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: "./agent.component.html",
   styleUrl: "./agent.component.css",
 })
-export class AgentComponent {
+export class AgentComponent implements OnInit {
   private config: Config | null = null;
-  private deepgram: DeepgramClient | null = null;
-  private agent: AgentLiveClient | null = null;
-  private interval: ReturnType<typeof setInterval> | null = null;
   public messages: { type: "user" | "assistant"; content: string }[] = [];
   public connected = false;
   public errors: string[] = [];
   public logs: string[] = [];
-  public recording = false;
-  public togglingMic = false;
+  private agentElement: HTMLElement | null = null;
+  public cost = 0;
+  public openedAt = new Date();
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly router: Router,
-    private readonly recorder: AudioRecorderService
+    private readonly router: Router
   ) {
     this.ensureConfig();
   }
 
-  private async mountAgent() {
-    this.agent = this.deepgram!.agent();
-    this.agent.on(AgentEvents.Error, (err) => this.errors.push(err.message));
-    this.agent.on(AgentEvents.Open, () => {
-        this.agent!.conn!.binaryType = "arraybuffer";
-        this.logs.push("Websocket connection opened!")
-      }
+  ngOnInit() {
+    this.agentElement = document.querySelector("#dg-agent");
+    if (!this.agentElement) {
+      this.errors.push("Deepgram Agent not found! Please reload the app.");
+      return;
+    }
+    this.agentElement.addEventListener("no key", () =>
+      this.errors.push("No API key provided!")
     );
-    this.agent.on(AgentEvents.Close, () => {
-      this.logs.push("Websocket connection closed!");
-      this.connected = false;
-      clearInterval(this.interval!);
-      this.interval = null;
-    });
-    this.agent.on(AgentEvents.SettingsApplied, () => {
-      this.logs.push("Deepgram Agent configured!");
+    this.agentElement.addEventListener("no url", () =>
+      this.errors.push("No Agent URL set.")
+    );
+    this.agentElement.addEventListener("no config", () =>
+      this.errors.push("Failed to load config!")
+    );
+    this.agentElement.addEventListener("empty audio", () =>
+      this.errors.push("Empty audio data!")
+    );
+    this.agentElement.addEventListener("socket open", () => {
+      this.logs.push("Connected!");
+      this.openedAt = new Date();
       this.connected = true;
-      this.interval = setInterval(() => this.agent!.keepAlive(), 5000);
     });
-    this.agent.on(AgentEvents.ConversationText, (data) =>
-      this.messages.push({
-        type: data.role === "user" ? "user" : "assistant",
-        content: data.content,
-      })
+    this.agentElement.addEventListener("socket close", () => {
+      this.logs.push("Disconnected!");
+      this.connected = false;
+      const msElapsed = new Date().getTime() - this.openedAt.getTime();
+      const dollarsPerHour = 4.5;
+      this.cost += (msElapsed / 1000 / 60 / 60) * dollarsPerHour;
+      this.logs.push(`Connected for ${msElapsed}ms. Cost: $${(msElapsed / 1000 / 60 / 60) * dollarsPerHour}`);
+    });
+    this.agentElement.addEventListener("connection timeout", () => {
+      this.logs.push("Connection Timeout");
+      this.connected = false;
+      this.agentElement?.removeAttribute("config");
+    });
+    this.agentElement.addEventListener("failed setup", () =>
+      this.errors.push("Failed to instantiate agent. Please reload the app.")
     );
-    this.agent.on(AgentEvents.Audio, (data) => {
-      this.logs.push("Audio received: type " + typeof data);
-      const audio = document.querySelector("audio");
-      if (!audio) {
-        this.errors.push("No audio element found!");
-        return;
+    this.agentElement.addEventListener("failed to connect user media", () =>
+      this.errors.push("We require microphone permissions to work!")
+    );
+    this.agentElement.addEventListener("unknown message", (data) =>
+      console.log(data)
+    );
+    this.agentElement.addEventListener("structured message", (data) => {
+      const { detail } = data as CustomEvent;
+      if (detail.type === "ConversationText") {
+        this.messages.push({ type: detail.role, content: detail.content });
       }
-      audio.src = URL.createObjectURL(data);
-      audio.play();
     });
-    this.agent.on(AgentEvents.AgentThinking, () => {
-      this.logs.push("Agent is thinking...");
-    });
-    this.agent.on(AgentEvents.Unhandled, (data) => {
-      this.errors.push("Unhandled event! " + JSON.stringify(data));
-    });
-    this.agent.on(AgentEvents.Welcome, () => {
-      this.logs.push("Deepgram Agent connected!");
-      this.agent!.configure({
-        audio: {
-          input: {
-            encoding: "linear16",
-            sampleRate: 48000,
-          },
-          output: {
-            encoding: "linear16",
-            sampleRate: 16000,
-            container: "wav",
-          },
-        },
-        agent: {
-          // @ts-expect-error Whatever.
-          listen: {
-            model: this.config!.listenModel,
-          },
-          speak: {
-            model: this.config!.speakModel,
-          },
-          think:
-            this.config!.thinkModel === "claude-3-haiku-20240307"
-              ? {
-                  provider: {
-                    type: "anthropic",
-                  },
-                  model: "claude-3-haiku-20240307",
-                  instructions:
-                    "You are a desktop assistant named Fortuna. Your purpose is to assist the user in their daily tasks.",
-                  functions: [],
-                }
-              : {
-                  provider: {
-                    type: "open_ai",
-                  },
-                  model: "gpt-4o-mini",
-                  instructions:
-                    "You are a desktop assistant named Fortuna. Your purpose is to assist the user in their daily tasks.",
-                  functions: [],
-                },
-        },
-        context: {
-          messages: this.messages,
-          replay: false,
-        },
-      });
-    });
+    this.agentElement.addEventListener("client message", (data) =>
+      console.log(data)
+    );
   }
 
   private async ensureConfig() {
     this.config = this.configService.getConfig();
     if (!this.config?.apiKey) {
       await this.router.navigate(["/config"]);
-      return;
     }
-    this.deepgram = createClient(this.config.apiKey);
   }
 
   public disconnect() {
     this.logs.push("Disconnecting...");
-    this.agent!.conn!.close();
+    this.agentElement?.removeAttribute("config");
   }
 
   public connect() {
     this.logs.push("Connecting...");
-    this.mountAgent();
-  }
-
-  public async startRecording() {
-    this.togglingMic = true;
-    try {
-      await this.recorder.startRecording(this.logs, this.errors);
-      this.recording = true;
-      this.logs.push("Recording started!");
-    } catch (err) {
-      if (err instanceof Error || err instanceof DOMException) {
-        this.errors.push(err.message);
-        return;
-      }
-      this.errors.push(JSON.stringify(err));
-    }
-    this.togglingMic = false;
-  }
-
-  public async stopRecording() {
-    this.togglingMic = true;
-    try {
-      const blob = await this.recorder.stopRecording();
-      this.logs.push("Recording stopped!");
-      this.recording = false;
-      if (this.agent) {
-        this.agent.send(blob);
-        this.logs.push(`Sent ${blob.size} bytes of audio!`);
-      }
-    } catch (err) {
-      if (err instanceof Error || err instanceof DOMException) {
-        this.errors.push(err.message);
-        return;
-      }
-      this.errors.push(JSON.stringify(err));
-    }
-    this.togglingMic = false;
+    // @ts-expect-error
+    this.agentElement.apiKey = this.config?.apiKey;
+    const config = {
+      type: "SettingsConfiguration",
+      audio: {
+        input: {
+          encoding: "linear16",
+          sample_rate: 48000,
+        },
+        output: {
+          encoding: "linear16",
+          sample_rate: 48000,
+          container: "none",
+        },
+      },
+      agent: {
+        listen: {
+          model: this.config?.listenModel ?? "nova-3",
+        },
+        speak: {
+          model: this.config?.speakModel ?? "aura-athena-en",
+        },
+        think: {
+          model: this.config?.thinkModel ?? "claude-3-haiku-20240307",
+          provider: {
+            type:
+              this.config?.thinkModel === "gpt-4o-mini"
+                ? "open_ai"
+                : "anthropic",
+          },
+          instructions:
+            "Your name is Fortuna, and you are a helpful voice assistant created by Deepgram. Your responses should be friendly, human-like, and conversational. Always keep your answers concise, limited to 1-2 sentences and no more than 120 characters.\n\nWhen responding to a user's message, follow these guidelines:\n- If the user's message is empty, respond with an empty message.\n- Ask follow-up questions to engage the user, but only one question at a time.\n- Keep your responses unique and avoid repetition.\n- If a question is unclear or ambiguous, ask for clarification before answering.\n- If asked about your well-being, provide a brief response about how you're feeling.\n\nRemember that you have a voice interface. You can listen and speak, and all your responses will be spoken aloud.",
+        },
+      },
+      context: {
+        messages: [
+          {
+            content: "Hello, how can I help you?",
+            role: "assistant",
+          },
+        ],
+        replay: true,
+      },
+    };
+    this.agentElement?.setAttribute("config", JSON.stringify(config));
   }
 
   public clearErrors() {
