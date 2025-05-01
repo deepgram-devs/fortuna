@@ -1,15 +1,59 @@
 <h1>Configuration</h1>
 <p>These settings determine how your Deepgram Voice Agent behaves.</p>
-<p>
-  Need an API key? Visit https://deepgram.com to get one!
-</p>
+<p>Need an API key? Visit https://deepgram.com to get one!</p>
 <form>
   <label for="apiKey">API Key:</label>
-  <input name="apiKey" id="apiKey" type="{{passType}}" [formControl]="apiKey">
+  <input
+    name="apiKey"
+    id="apiKey"
+    type="{{ passType }}"
+    [formControl]="apiKey"
+  />
   <label for="showPass">Show?</label>
   <input type="checkbox" id="showPass" name="showPass" (click)="togglePass()" />
   <label for="speak">Speak Model:</label>
   <select name="speak" id="speak" [formControl]="speakModel">
+    <option value="aura-2-amalthea-en">aura-2-amalthea-en</option>
+    <option value="aura-2-andromeda-en">aura-2-andromeda-en</option>
+    <option value="aura-2-apollo-en">aura-2-apollo-en</option>
+    <option value="aura-2-arcas-en">aura-2-arcas-en</option>
+    <option value="aura-2-aries-en">aura-2-aries-en</option>
+    <option value="aura-2-asteria-en">aura-2-asteria-en</option>
+    <option value="aura-2-athena-en">aura-2-athena-en</option>
+    <option value="aura-2-atlas-en">aura-2-atlas-en</option>
+    <option value="aura-2-aurora-en">aura-2-aurora-en</option>
+    <option value="aura-2-callista-en">aura-2-callista-en</option>
+    <option value="aura-2-cordelia-en">aura-2-cordelia-en</option>
+    <option value="aura-2-cora-en">aura-2-cora-en</option>
+    <option value="aura-2-delia-en">aura-2-delia-en</option>
+    <option value="aura-2-draco-en">aura-2-draco-en</option>
+    <option value="aura-2-electra-en">aura-2-electra-en</option>
+    <option value="aura-2-harmonia-en">aura-2-harmonia-en</option>
+    <option value="aura-2-helena-en">aura-2-helena-en</option>
+    <option value="aura-2-hera-en">aura-2-hera-en</option>
+    <option value="aura-2-hermes-en">aura-2-hermes-en</option>
+    <option value="aura-2-hyperion-en">aura-2-hyperion-en</option>
+    <option value="aura-2-iris-en">aura-2-iris-en</option>
+    <option value="aura-2-janus-en">aura-2-janus-en</option>
+    <option value="aura-2-juno-en">aura-2-juno-en</option>
+    <option value="aura-2-jupiter-en">aura-2-jupiter-en</option>
+    <option value="aura-2-luna-en">aura-2-luna-en</option>
+    <option value="aura-2-mars-en">aura-2-mars-en</option>
+    <option value="aura-2-minerva-en">aura-2-minerva-en</option>
+    <option value="aura-2-neptune-en">aura-2-neptune-en</option>
+    <option value="aura-2-odysseus-en">aura-2-odysseus-en</option>
+    <option value="aura-2-ophelia-en">aura-2-ophelia-en</option>
+    <option value="aura-2-orion-en">aura-2-orion-en</option>
+    <option value="aura-2-orpheus-en">aura-2-orpheus-en</option>
+    <option value="aura-2-pandora-en">aura-2-pandora-en</option>
+    <option value="aura-2-phoebe-en">aura-2-phoebe-en</option>
+    <option value="aura-2-pluto-en">aura-2-pluto-en</option>
+    <option value="aura-2-saturn-en">aura-2-saturn-en</option>
+    <option value="aura-2-selene-en">aura-2-selene-en</option>
+    <option value="aura-2-thalia-en">aura-2-thalia-en</option>
+    <option value="aura-2-theia-en">aura-2-theia-en</option>
+    <option value="aura-2-vesta-en">aura-2-vesta-en</option>
+    <option value="aura-2-zeus-en">aura-2-zeus-en</option>
     <option value="aura-asteria-en">aura-asteria-en</option>
     <option value="aura-luna-en">aura-luna-en</option>
     <option value="aura-athena-en">aura-athena-en</option>
