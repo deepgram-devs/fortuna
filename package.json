@@ -2,7 +2,7 @@
   "name": "fortuna",
   "description": "Deepgram's Voice Agent right on your desktop!",
   "author": "Naomi Carrigan <contact@nhcarrigan.com>",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "app.js",
   "license": "ISC",
   "scripts": {
@@ -37,7 +37,8 @@
     "@electron-forge/plugin-fuses": "^7.7.0",
     "@electron/fuses": "^1.8.0",
     "@nhcarrigan/eslint-config": "5.1.0",
-    "@nhcarrigan/typescript-config": "4.0.0",    "@types/jasmine": "~5.1.5",
+    "@nhcarrigan/typescript-config": "4.0.0",
+    "@types/jasmine": "~5.1.5",
     "@types/node": "22.13.1",
     "concurrently": "^9.1.2",
     "electron": "34.0.2",
