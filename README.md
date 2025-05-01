@@ -30,9 +30,6 @@ Once you have configured these, you can click "Start Agent" to load the interfac
 
 ## Development
 
-> [!WARNING]
-> Currently our browser-agent orb is NOT published for distribution. To successfully install the dependencies, you will need to package the source manually and copy it to your cloned repository.
-
 Clone this repository, then `cd` into your cloned directory.
 
 Run `npm install` to install the dependencies.
