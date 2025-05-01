@@ -22,7 +22,7 @@ export class AgentComponent {
   public logs: string[] = [];
   public cost = 0;
   public openedAt = new Date();
-  public source = "/assets/fortuna.png";
+  public source = "assets/fortuna.png";
   private keepAlive: NodeJS.Timeout | null = null;
   private scheduledPlaybackSources: Set<AudioBufferSourceNode> = new Set();
   private ttsAnalyser: AnalyserNode;
@@ -47,7 +47,7 @@ export class AgentComponent {
       this.keepAlive && clearInterval(this.keepAlive);
       this.keepAlive = null;
       this.logs.push("Connection closed");
-      this.source = "/assets/fortuna.png";
+      this.source = "assets/fortuna.png";
     });
 
     this.socket.on("Error", (error: string) => {
@@ -70,7 +70,7 @@ export class AgentComponent {
     });
 
     this.socket.on("Audio", async (data: Blob) => {
-      this.source = "/assets/fortuna-speak.png";
+      this.source = "assets/fortuna-speak.png";
       const arrayBuffer = await data.arrayBuffer();
       const audioDataView = new Int16Array(arrayBuffer);
       if (audioDataView.length === 0) {
@@ -101,7 +101,7 @@ export class AgentComponent {
       source.addEventListener("ended", () => {
         this.scheduledPlaybackSources.delete(source);
         if (this.scheduledPlaybackSources.size === 0) {
-          this.source = "/assets/fortuna.png";          this.startTime = 0;
+          this.source = "assets/fortuna.png";          this.startTime = 0;
         }
       });
       source.start(this.startTime);
@@ -115,7 +115,7 @@ export class AgentComponent {
         source.stop();
         this.scheduledPlaybackSources.delete(source);
       })
-      this.source = "/assets/fortuna.png";
+      this.source = "assets/fortuna.png";
     });
 
     this.socket.on("SettingsApplied", () => {
@@ -172,7 +172,7 @@ export class AgentComponent {
   public disconnect() {
     this.logs.push("Disconnecting...");
     this.socket.disconnect();
-    this.source = "/assets/fortuna.png";
+    this.source = "assets/fortuna.png";
     const msElapsed = new Date().getTime() - this.openedAt.getTime();
     const dollarsPerHour = 4.5;
     this.cost += (msElapsed / 1000 / 60 / 60) * dollarsPerHour;
