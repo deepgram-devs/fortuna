@@ -3,4 +3,5 @@ export interface Config {
   speakModel: string;
   thinkModel: string;
   listenModel: string;
+  name: string;
 }
