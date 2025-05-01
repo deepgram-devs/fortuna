@@ -1,9 +1,5 @@
 <h1>Fortuna</h1>
-<deepgram-agent id="dg-agent"
-url="wss://agent.deepgram.com/agent"
-height="250"
-width="250"
-idle-timeout-ms="1000000"></deepgram-agent>
+<img id="fortuna" [src]="source" alt="Fortuna" />
 <p>
   Usage: {{ this.cost.toLocaleString("en-US", { style: "currency", currency: "USD"})}}
 </p>
