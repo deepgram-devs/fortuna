@@ -2,6 +2,14 @@
 <p>These settings determine how your Deepgram Voice Agent behaves.</p>
 <p>Need an API key? Visit https://deepgram.com to get one!</p>
 <form>
+  <label for="name">Your Name:</label>
+  <input
+    name="name"
+    id="name"
+    type="text"
+    [formControl]="name"
+    placeholder="What should I call you?"
+  />
   <label for="apiKey">API Key:</label>
   <input
     name="apiKey"
