@@ -23,9 +23,11 @@ export class AgentComponent {
   public cost = 0;
   public openedAt = new Date();
   public source = "/assets/fortuna.png";
-  private buffer: string[] = [];
   private keepAlive: NodeJS.Timeout | null = null;
-  private audio: HTMLAudioElement;
+  private scheduledPlaybackSources: Set<AudioBufferSourceNode> = new Set();
+  private ttsAnalyser: AnalyserNode;
+  private ttsContext: AudioContext;
+  private startTime = 0;
 
   constructor(
     private readonly socket: SocketService,
@@ -34,14 +36,11 @@ export class AgentComponent {
   ) {
     this.ensureConfig();
 
-    this.audio = new Audio();
-
-    this.audio.onplay = () => {
-      this.source = "/assets/fortuna-speak.png";
-    };
-    this.audio.onended = () => {
-      this.source = "/assets/fortuna.png";
-    };
+    this.ttsContext = new AudioContext({latencyHint: "interactive", sampleRate: 48000});
+    this.ttsAnalyser = this.ttsContext.createAnalyser();
+    this.ttsAnalyser.fftSize = 2048;
+    this.ttsAnalyser.smoothingTimeConstant = 0.96;
+    this.ttsAnalyser.connect(this.ttsContext.destination);
 
     this.socket.on("close", () => {
       this.connected = false;
@@ -67,26 +66,56 @@ export class AgentComponent {
 
     this.socket.on("ConversationText", (message) => {
       const data = JSON.parse(message);
-      console.log(`Received ${data.role} message: `, data);
       this.messages.push({ type: data.role, content: data.content });
     });
 
-    this.socket.on("Audio", (data: any) => {
-      this.buffer.push(data);
+    this.socket.on("Audio", async (data: Blob) => {
+      this.source = "/assets/fortuna-speak.png";
+      const arrayBuffer = await data.arrayBuffer();
+      const audioDataView = new Int16Array(arrayBuffer);
+      if (audioDataView.length === 0) {
+        this.logs.push("Received empty audio data");
+        return;
+      }
+      const buffer = this.ttsAnalyser.context.createBuffer(
+        1,
+        audioDataView.length,
+        this.ttsAnalyser.context.sampleRate
+      );
+      const channelData = buffer.getChannelData(0);
+
+      // Convert linear16 PCM to float [-1, 1]
+      audioDataView.forEach((value, index) => {
+        channelData[index] = value / 32768;
+      });
+
+      const source = this.ttsAnalyser.context.createBufferSource();
+      source.buffer = buffer;
+      source.connect(this.ttsAnalyser);
+
+      const { currentTime } = this.ttsAnalyser.context;
+      if (this.startTime < currentTime) {
+        this.startTime = currentTime;
+      }
+
+      source.addEventListener("ended", () => {
+        this.scheduledPlaybackSources.delete(source);
+        if (this.scheduledPlaybackSources.size === 0) {
+          this.source = "/assets/fortuna.png";          this.startTime = 0;
+        }
+      });
+      source.start(this.startTime);
+      this.startTime += buffer.duration;
+
+      this.scheduledPlaybackSources.add(source);
     });
 
     this.socket.on("UserStartedSpeaking", () => {
-      this.audio.pause();
-      this.audio.src = "";
+      this.scheduledPlaybackSources.forEach((source) => {
+        source.stop();
+        this.scheduledPlaybackSources.delete(source);
+      })
       this.source = "/assets/fortuna.png";
-    });
-
-    this.socket.on("AgentAudioDone", () => {
-      const audioBlob = new Blob(this.buffer, { type: "audio/wav" });
-      this.buffer = [];
-      const url = URL.createObjectURL(audioBlob);
-      this.audio.src = url;
-      this.audio.play();
     });
 
     this.socket.on("SettingsApplied", () => {

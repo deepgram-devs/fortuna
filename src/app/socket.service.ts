@@ -40,7 +40,6 @@ export class SocketService {
         });
         return;
       }
-      console.log('WebSocket connection opened');
     }
     this.socket.onmessage = (event) => {
       if (event.data instanceof Blob) {
@@ -48,21 +47,17 @@ export class SocketService {
           this.listeners["Audio"].forEach((callback) => {
             callback(event.data);
           });
-          console.log("Handling audio event");
           return;
         }
-        console.log("Unhandled audio event");
         return;
       }
       const { type } = JSON.parse(event.data);
       if (this.listeners[type]) {
-        console.log(`Handling event type: ${type}`);
         this.listeners[type].forEach((callback) => {
           callback(event.data);
         });
         return;
       }
-      console.log("Unhandled event type: ", type);
     }
     this.socket.onclose = () => {
       if (this.listeners["close"]) {
@@ -71,7 +66,6 @@ export class SocketService {
         });
         return;
       }
-      console.log('WebSocket connection closed');
     }
     this.socket.onerror = (error) => {
       if (this.listeners["error"]) {
@@ -80,7 +74,6 @@ export class SocketService {
         });
         return;
       }
-      console.error('WebSocket error: ', error);
     }
   }
 
